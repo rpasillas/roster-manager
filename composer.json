@@ -1,0 +1,68 @@
+{
+    "name": "alleyinteractive/wp-roster-manager",
+    "description": "This is my plugin Roster Manager",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "alleyinteractive",
+        "wp-roster-manager"
+    ],
+    "homepage": "https://github.com/alleyinteractive/wp-roster-manager",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Ron Pasillas",
+            "email": "ron@alley.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "alleyinteractive/composer-wordpress-autoloader": "^1.0",
+        "alleyinteractive/wp-type-extensions": "^2.1"
+    },
+    "require-dev": {
+        "alleyinteractive/alley-coding-standards": "^2.0",
+        "mantle-framework/testkit": "^1.4",
+        "szepeviktor/phpstan-wordpress": "^2.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "alleyinteractive/composer-wordpress-autoloader": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Alley\\WP\\Roster_Manager\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "wordpress-autoloader": {
+            "autoload": {
+                "Alley\\WP\\Roster_Manager\\": "src"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "phpcbf": "phpcbf .",
+        "phpcs": "phpcs .",
+        "phpstan": "phpstan --memory-limit=512M",
+        "lint": [
+            "@phpcs",
+            "@phpstan"
+        ],
+        "lint:fix": [
+            "@phpcbf"
+        ],
+        "phpunit": "phpunit",
+        "release": "npx @alleyinteractive/create-release@latest",
+        "test": [
+            "@phpcs",
+            "@phpstan",
+            "@phpunit"
+        ]
+    }
+}
