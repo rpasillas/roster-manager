@@ -14,7 +14,9 @@ use Alley\WP\Features\Group;
  */
 function main(): void {
 	// Add features here.
-	$plugin = new Group();
+	$plugin = new Group(
+		new Features\Player_Game_Hitting(),
+	);
 
 	$plugin->boot();
 }

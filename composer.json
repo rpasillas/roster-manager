@@ -29,7 +29,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\WP\\Roster_Manager\\Tests\\": "tests"
+          "Alley\\WP\\Roster_Manager\\Tests\\": "tests",
+          "Alley\\WP\\Roster_Manager\\Features\\": "src/features/"
         }
     },
     "extra": {
