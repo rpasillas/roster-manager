@@ -2,11 +2,6 @@
     "name": "alleyinteractive/wp-roster-manager",
     "description": "This is my plugin Roster Manager",
     "type": "wordpress-plugin",
-    "keywords": [
-        "alleyinteractive",
-        "wp-roster-manager"
-    ],
-    "homepage": "https://github.com/alleyinteractive/wp-roster-manager",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
