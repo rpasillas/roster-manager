@@ -31,6 +31,7 @@ final class Player_Game_Hitting implements Feature {
 	}
 
 	public function register_player_game_hitting_routes() {
+		//@link https://roster-manager.alley.test/wp-json/roster-manager/v1/player-game-hitting?player_id=31&game_number=37
 		register_rest_route( 'roster-manager/v1', '/player-game-hitting/', [
 			'methods'  => 'GET',
 			'callback' => [ $this, 'get_player_game_batting' ],
@@ -73,26 +74,23 @@ final class Player_Game_Hitting implements Feature {
 		return rest_ensure_response( $this->get_player_game_batting_data( $player_id, $game_number ) );
 	}
 
-	public function get_player_game_batting_data( $id, $game_number = null ): array {
+	/**
+	 *
+	 *
+	 * @param int $id the player id
+	 * @param int|null $game_number If null, get the full season
+	 *
+	 * @return array
+	 */
+	public function get_player_game_batting_data( int $id, int $game_number = null ): array {
 		//@link https://en.wikipedia.org/wiki/Batted_ball
-		return [
-			'player_id'   => $id,
-			'player_name' => 'Ulises Pasillas',
-			'player_number' => 5,
-			'game_number' => $game_number,
-			'at_bats' => 2,
-			'runs' => 1,
-			'hits' => 1,
-			'rbi' => 1,
-			'hr' => 0,
-			'opponent' => 'Red Sox',
-			'home_team' => 'Red Sox',
-			'final' => [
-				'visitors' => 6,
-				'home' => 4,
-				'result' => 'win',
-			],
-			'at_bats_pitch_sequence'     => [
+		$data = [
+			'at_bats'                => 2,
+			'runs'                   => 1,
+			'hits'                   => 1,
+			'rbi'                    => 1,
+			'hr'                     => 0,
+			'at_bats_pitch_sequence' => [
 				[ // first at bat
 					'hand' => 'right',
 					'outs' => 2,
@@ -205,6 +203,42 @@ final class Player_Game_Hitting implements Feature {
 					],
 				],
 			]
+		];
+
+		$player = $this->get_player( $id );
+		$game   = $this->get_game( $game_number );
+
+		$data = array_merge( $player, $game, $data );
+
+		return $data;
+	}
+
+	public function get_game( $id ) {
+		return [
+			'game' => [
+				'game_number' => $id,
+				'opponent'    => 'Red Sox',
+				'home_team'   => 'Red Sox',
+				'date'        => '',
+				'time'        => '',
+				'field'       => [
+					'location' => 'Ronald Reagan',
+					'number'   => 4,
+				],
+				'score'       => [
+					'visitors' => 6,
+					'home'     => 4,
+					'result'   => 'win',
+				],
+			],
+		];
+	}
+
+	public function get_player( $id ): array {
+		return [
+			'player_id'     => $id,
+			'player_name'   => 'Ulises Pasillas',
+			'player_number' => 5,
 		];
 	}
 
