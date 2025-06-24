@@ -213,16 +213,16 @@ final class Player_Game_Hitting implements Feature {
 		return $data;
 	}
 
-	public function get_game( $id ) {
+	public function get_game( $id ): array {
 		return [
 			'game' => [
-				'game_number' => $id,
-				'opponent'    => 'Red Sox',
+				'game_number' => $id, // games can be a post type
+				'opponent'    => 'Red Sox', // Teams can be a post type
 				'home_team'   => 'Red Sox',
 				'date'        => '',
 				'time'        => '',
 				'field'       => [
-					'location' => 'Ronald Reagan',
+					'location' => 'Ronald Reagan', // Locations can be a taxonomy
 					'number'   => 4,
 				],
 				'score'       => [
@@ -236,7 +236,7 @@ final class Player_Game_Hitting implements Feature {
 
 	public function get_player( $id ): array {
 		return [
-			'player_id'     => $id,
+			'player_id'     => $id, // players can be a post type
 			'player_name'   => 'Ulises Pasillas',
 			'player_number' => 5,
 		];
