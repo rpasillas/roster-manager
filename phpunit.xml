@@ -16,7 +16,10 @@
     </testsuite>
   </testsuites>
   <php>
-    <!-- <env name="MANTLE_USE_SQLITE" value="true" /> -->
-    <!-- <env name="WP_SKIP_DB_CREATE" value="true" /> -->
+    <env name="WP_SKIP_DB_CREATE" value="true" />
+    <env name="DB_HOST" value="localhost" />
+    <env name="DB_NAME" value="wordpress_unit_tests" />
+    <env name="DB_USER" value="root" />
+    <env name="DB_PASSWORD" value="root" />
   </php>
 </phpunit>
