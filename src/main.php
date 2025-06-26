@@ -16,6 +16,11 @@ function main(): void {
 	// Add features here.
 	$plugin = new Group(
 		new Features\Player_Game_Hitting(),
+		new Features\post_types\Games(),
+		new Features\post_types\Players(),
+		new Features\post_types\Teams(),
+		new Features\taxonomies\Seasons(),
+		new Features\taxonomies\Positions(),
 	);
 
 	$plugin->boot();

@@ -10,12 +10,7 @@ namespace Alley\WP\Roster_Manager\Features\player\game\fielding;
 use Alley\WP\Types\Feature;
 
 /**
- * Who knows what kind of stats will go here?
  *
- * - errors
- * - catches
- * - position
- * - assists
  */
 final class Player_Game_Fielding implements Feature {
 	/**
