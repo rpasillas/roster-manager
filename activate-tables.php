@@ -64,10 +64,9 @@ class Activate_Tables {
 		// Get the WordPress database charset and collation
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$player_games_table = $wpdb->prefix . 'player_games';
-
 		// Define table names with WordPress prefix
-		$at_bats_table = $wpdb->prefix . 'at_bats';
+		$at_bats_table      = $wpdb->prefix . 'at_bats';
+		$player_games_table = $wpdb->prefix . 'player_games';
 
 		if ( $this->check_table_exists( $at_bats_table) ) {
 			$this->drop_table( $at_bats_table );
@@ -103,6 +102,53 @@ class Activate_Tables {
 	}
 
 	/**
+	 * Creates the `wp_pitches` table. Drops it first if it already exists.
+	 *
+	 * @return void
+	 */
+	public function pitches_table(): void {
+		global $wpdb;
+
+		// Get the WordPress database charset and collation
+		$charset_collate = $wpdb->get_charset_collate();
+
+		// Define table names with WordPress prefix
+		$pitches_table = $wpdb->prefix . 'pitches';
+		$at_bats_table = $wpdb->prefix . 'at_bats';
+
+		if ( $this->check_table_exists( $pitches_table) ) {
+			$this->drop_table( $pitches_table );
+			return;
+		}
+
+		// SQL for wp_player_games table
+		$sql_pitches = "CREATE TABLE $pitches_table (
+	        id int(11) NOT NULL AUTO_INCREMENT,
+	        at_bat_id int(11) NOT NULL,
+	        pitch_number tinyint(2) unsigned NOT NULL,
+	        balls tinyint(2) unsigned NOT NULL,
+	        strikes tinyint(2) unsigned NOT NULL,
+	        result_type varchar(32) DEFAULT NULL,
+	        batted_ball_fair_foul varchar(32) DEFAULT NULL,
+	        batted_ball_type varchar(32) DEFAULT NULL,
+	        hit_location_depth varchar(32) DEFAULT NULL,
+	        hit_location_area varchar(32) DEFAULT NULL,
+	        reached_base tinyint(1) DEFAULT 0,
+	        rbi tinyint(2) DEFAULT 0,
+	        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+	        updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	        PRIMARY KEY (id),
+	        KEY at_bat_id (at_bat_id),
+	        FOREIGN KEY (at_bat_id) REFERENCES {$at_bats_table}(id) ON DELETE CASCADE
+	    ) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql_pitches );
+
+		add_option( 'roster_manager_version', '0.0.0' );
+	}
+
+	/**
 	 * Checks if a given table exists.
 	 *
 	 * @param string $table The table name.
@@ -131,4 +177,5 @@ register_activation_hook( __DIR__ . '\wp-roster-manager.php', function(){
 	$activator = new Activate_Tables();
 	$activator->player_games_table();
 	$activator->at_bats_table();
+	$activator->pitches_table();
 });
