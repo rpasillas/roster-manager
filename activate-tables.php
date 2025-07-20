@@ -54,6 +54,55 @@ class Activate_Tables {
 	}
 
 	/**
+	 * Creates the `wp_at_bats` table. Drops it first if it already exists.
+	 *
+	 * @return void
+	 */
+	public function at_bats_table(): void {
+		global $wpdb;
+
+		// Get the WordPress database charset and collation
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$player_games_table = $wpdb->prefix . 'player_games';
+
+		// Define table names with WordPress prefix
+		$at_bats_table = $wpdb->prefix . 'at_bats';
+
+		if ( $this->check_table_exists( $at_bats_table) ) {
+			$this->drop_table( $at_bats_table );
+			return;
+		}
+
+		// SQL for wp_player_games table
+		$sql_at_bats = "CREATE TABLE $at_bats_table (
+	        id int(11) NOT NULL AUTO_INCREMENT,
+	        player_game_id int(11) NOT NULL,
+	        at_bat_number tinyint(2) unsigned NOT NULL,
+	        inning tinyint(2) unsigned NOT NULL,
+	        outs tinyint(1) DEFAULT NULL,
+	        batting_hand varchar(10) DEFAULT NULL,
+	        pitcher_hand int(11) DEFAULT 0,
+	        pitcher_number tinyint(2) DEFAULT 0,
+	        runner_first tinyint(1) DEFAULT 0,
+	        runner_second tinyint(1) DEFAULT 0,
+	        runner_third tinyint(1) DEFAULT 0,
+	        result varchar(10) DEFAULT NULL,
+	        rbi_count tinyint(2) DEFAULT 0,
+	        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+	        updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	        PRIMARY KEY (id),
+	        KEY player_game_id (player_game_id),
+	        FOREIGN KEY (player_game_id) REFERENCES {$player_games_table}(id) ON DELETE CASCADE
+	    ) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql_at_bats );
+
+		add_option( 'roster_manager_version', '0.0.0' );
+	}
+
+	/**
 	 * Checks if a given table exists.
 	 *
 	 * @param string $table The table name.
@@ -81,4 +130,5 @@ class Activate_Tables {
 register_activation_hook( __DIR__ . '\wp-roster-manager.php', function(){
 	$activator = new Activate_Tables();
 	$activator->player_games_table();
+	$activator->at_bats_table();
 });
