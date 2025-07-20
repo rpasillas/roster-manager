@@ -1,12 +1,16 @@
 <?php
-error_log('activate-tables.php');
+
+/**
+ * Class that creates the necessary tables.
+ */
 class Activate_Tables {
-	public function __construct( $message = 'default' ) {
-		error_log( $message );
-	}
-	public function player_games_table() {
+	/**
+	 * Creates the `wp_player_games` table. Drops it first if it already exists.
+	 *
+	 * @return void
+	 */
+	public function player_games_table(): void {
 		global $wpdb;
-		error_log( 'player_games_table' );
 
 		// Get the WordPress database charset and collation
 		$charset_collate = $wpdb->get_charset_collate();
@@ -49,18 +53,32 @@ class Activate_Tables {
 		add_option( 'roster_manager_version', '0.0.0' );
 	}
 
-	public function check_table_exists( $table ) {
+	/**
+	 * Checks if a given table exists.
+	 *
+	 * @param string $table The table name.
+	 *
+	 * @return string|null
+	 */
+	public function check_table_exists( string $table ): ?string {
 		global $wpdb;
 		return $wpdb->get_var( "SHOW TABLES LIKE '$table'" );
 	}
 
-	public function drop_table( $table ) {
+	/**
+	 * Drops a given table name.
+	 *
+	 * @param string $table The table name.
+	 *
+	 * @return void
+	 */
+	public function drop_table( string $table ): void {
 		global $wpdb;
 		$wpdb->query( "DROP TABLE IF EXISTS $table" );
 		delete_option( 'roster_manager_version' );
 	}
 }
 register_activation_hook( __DIR__ . '\wp-roster-manager.php', function(){
-	$activator = new Activate_Tables('hello world');
+	$activator = new Activate_Tables();
 	$activator->player_games_table();
 });
